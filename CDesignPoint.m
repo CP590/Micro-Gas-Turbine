@@ -1,0 +1,44 @@
+function [rc, r1s, b2, A1, Ns, beta1s, U2, M1s, M2, M2rel, sigma] = CDesignPoint(P01, T01, k, Cp, R, etac, r1h, r2, alpha2m, beta1h, Z, md, N, betab2)
+
+sigma = 1 - (sqrt(cosd(betab2)))/Z;
+%sigma= 1 - (cosd(betab2))/Z^0.7;
+lamda = sigma/(1-(tand(betab2)/tand(alpha2m)));
+U1h = 2*pi*N*r1h/60;
+Cm1 = U1h/tand(beta1h);
+T1 = T01 - (Cm1^2/(2*Cp));
+a1 = sqrt(k*R*T1);
+rho01 = P01/(R*T01);
+U2 = 2*pi*N*r2/60;
+Mu = U2/a1;
+rc = (1+(k-1)*etac*lamda*Mu^2)^(k/(k-1));
+P02 = P01*rc;
+Ctheta2 = lamda*U2;
+Cm2 = Ctheta2/tand(alpha2m);
+T02 = T01*(1+(k-1)*lamda*Mu^2);
+rho02 = P02/(R*T02);
+delh = (U2*Ctheta2);
+W1h = U1h/sind(beta1h);
+M1h = U1h/a1;
+P1 = P01/((T01./T1)^(k/(k-1)));
+rho1 = P1/(R*T1);
+A1 = md/(rho1*Cm1);
+r1s = sqrt((A1/pi) + r1h^2);
+U1s = 2*pi*N*r1s/60;
+W1s = sqrt(Cm1^2 + U1s^2);
+M1s = U1s/a1;
+beta1s = atand(U1s/Cm1);
+C2 = sqrt(Ctheta2^2 + Cm2^2);
+T2 = T02 - C2^2/(2*Cp);
+a2 = sqrt(k*R*T2);
+W2 = sqrt(Cm2^2 + (U2 - Ctheta2)^2);
+M2rel = W2/a2;
+M2 = C2/a2;
+P2 = P02/((T02./T2)^(k/(k-1)));
+rho2 = P2/(R*T2);
+A2 = md/(rho2*Cm2);
+b2 = A2/(2*pi*r2);
+Ns = 2*pi*N*sqrt(md/(0.5*(rho01+rho02)))/(60*delh^0.75);
+DR2 = W1s/W2;
+MR2 = M1s/M2rel;
+
+end
